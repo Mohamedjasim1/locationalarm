@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        /* Set the fixed background image for the body */
+        body {
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Center the content */
+        .set-alarm-container {
+            text-align: center;
+            margin-top: 50px;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            color: #333; /* Text color */
+        }
+
+        /* Style for the rectangular box */
+        .content-box {
+            border: 2px solid rgba(0, 116, 217, 0.7); /* Transparent blue border */
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
+            backdrop-filter: blur(5px); /* Apply a blur effect to the background */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        /* Decrease the opacity of the box background on hover */
+        .content-box:hover {
+            background-color: rgba(255, 255, 255, 0.7); /* Slightly less transparent on hover */
+        }
+
+        /* Style for the form elements inside the box */
+        .content-box form label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .content-box form input[type="number"],
+        .content-box form input[type="text"] {
+            width: 90%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Style for the button */
+        .content-box form button {
+            background-color: rgba(0, 116, 217, 0.7); /* Transparent blue background */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 10px auto;
+        }
+
+        .content-box form button:hover {
+            background-color: rgba(0, 86, 179, 0.7); /* Darker blue on hover */
+        }
+
+        /* Style for the Google Maps link */
+        .google-maps-link {
+            color: rgba(0, 116, 217, 0.7); /* Transparent blue text */
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Style for the location display */
+        #currentLocation {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* Style for the target location display */
+        #targetLocation {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Style for the distance message */
+        #distanceMessage {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Style for the responsive navigation menu */
+        .navbar {
+            background-color: transparent;
+            font-size: 14px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .navbar .menu-icon {
+            display: inline-block;
+            cursor: pointer;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .navbar .nav-links {
+            display: none;
+        }
+
+        .navbar.open .nav-links {
+            display: block;
+        }
+
+        .navbar .nav-links a {
+            color: rgba(255, 255, 255, 0.7); /* Transparent white text */
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .navbar .nav-links a:hover {
+            color: rgba(0, 116, 217, 0.7); /* Transparent blue on hover */
+        }
+    </style>
+    <script>
+        var targetLatitude;
+        var targetLongitude;
+        var currentLatitude;
+        var currentLongitude;
+        var alarmSound;
+
+        var watchId; // Variable to store the watch position ID
+
+        // Function to initialize the alarm sound
+        function initAlarm() {
+            alarmSound = new Audio('audio.mp3'); // Replace 'audio.mp3' with the path to your alarm sound file
+            alarmSound.loop = true; // Loop the alarm sound
+        }
+
+        // Function to play the alarm sound
+        function playAlarm() {
+            if (alarmSound) {
+                alarmSound.play();
+            }
+        }
+
+        // Function to stop the alarm sound
+        function stopAlarm() {
+            if (alarmSound) {
+                alarmSound.pause();
+                alarmSound.currentTime = 0;
+            }
+        }
+
+        function toggleAlarm() {
+            if (alarmSound.paused) {
+                playAlarm();
+            } else {
+                stopAlarm();
+            }
+        }
+
+        // Function to get the current location
+        function getLocation() {
+            if ("geolocation" in navigator) {
+                // Clear any previous watch
+                if (watchId) {
+                    navigator.geolocation.clearWatch(watchId);
+                }
+
+                // Start watching the position
+                watchId = navigator.geolocation.watchPosition(function(position) {
+                    currentLatitude = position.coords.latitude;
+                    currentLongitude = position.coords.longitude;
+
+                    // Display the current location
+                    var currentLocationElement = document.getElementById("currentLocation");
+                    currentLocationElement.innerHTML = "Current Location: Latitude " + currentLatitude + ", Longitude " + currentLongitude;
+
+                    // Check the distance from the current location
+                    checkDistance();
+                });
+            } else {
+                alert("Geolocation is not supported by your browser.");
+            }
+        }
+
+        // Function to set the target location using the specified latitude and longitude
+        function setTargetLocation() {
+            var latitude = parseFloat(document.getElementById("latitude").value);
+            var longitude = parseFloat(document.getElementById("longitude").value);
+            if (!isNaN(latitude) && !isNaN(longitude)) {
+                targetLatitude = latitude;
+                targetLongitude = longitude;
+
+                // Display the target location
+                var targetLocationElement = document.getElementById("targetLocation");
+                targetLocationElement.innerHTML = "Target Location: Latitude " + targetLatitude + ", Longitude " + targetLongitude;
+
+                // Check the distance from the current location
+                checkDistance();
+            } else {
+                alert("Please enter valid latitude and longitude.");
+            }
+        }
+
+        // Function to calculate the distance between the current location and the target location
+        function checkDistance() {
+            // Calculate the distance using the Haversine formula
+            var distance = getDistance(currentLatitude, currentLongitude, targetLatitude, targetLongitude);
+
+            // Display the distance message
+            var distanceMessageElement = document.getElementById("distanceMessage");
+            distanceMessageElement.innerHTML = "Distance to Target: " + distance.toFixed(2) + " km";
+
+            // Check if the user is near the target location (within 1 km)
+            if (distance <= 1.0) {
+                playAlarm(); // Start playing the alarm
+                alert("You have reached the target location!");
+            } else {
+                stopAlarm(); // Stop the alarm if the distance is greater than 1 km
+            }
+        }
+
+        // Function to calculate the distance between two sets of latitude and longitude coordinates using the Haversine formula
+        function getDistance(lat1, lon1, lat2, lon2) {
+            var radLat1 = Math.PI * lat1 / 180;
+            var radLat2 = Math.PI * lat2 / 180;
+            var theta = lon1 - lon2;
+            var radTheta = Math.PI * theta / 180;
+            var dist = Math.sin(radLat1) * Math.sin(radLat2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
+            dist = Math.acos(dist);
+            dist = dist * 180 / Math.PI;
+            dist = dist * 60 * 1.1515; // Miles (you can convert to other units)
+            dist = dist * 1.609344; // Kilometers
+            return dist;
+        }
+
+        // Function to search for a location by name and display it on Google Maps
+        function searchLocation() {
+            var locationName = document.getElementById("locationName").value;
+            if (locationName.trim() !== "") {
+                var googleMapsUrl = "https://www.google.com/maps?q=" + encodeURI(locationName);
+                window.open(googleMapsUrl);
+            } else {
+                alert("Please enter a location name.");
+            }
+        }
+
+        // Function to handle menu toggle
+        function toggleMenu() {
+            var navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('open');
+        }
+    </script>
+</head>
+<body onload="initAlarm()">
+    <div class="navbar">
+        <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a class="active" href="#">Set Alarm</a>
+            <a href="info.html">Info</a>
+            <a href="login.html">Login</a>
+        </div>
+    </div>
+    <div class="set-alarm-container">
+        <div class="content-box">
+            <h2>Set Alarm</h2>
+            <form>
+                <button type="button" onclick="getLocation()">Get Location</button>
+                <p id="currentLocation"></p> <!-- Display current location here -->
+                <br>
+                <label for="latitude">Latitude:</label>
+                <input type="number" id="latitude" step="any" placeholder="Enter Latitude">
+                <br>
+                <label for="longitude">Longitude:</label>
+                <input type="number" id="longitude" step="any" placeholder="Enter Longitude">
+                <br>
+                <button type="button" onclick="setTargetLocation()">Set Target Location</button>
+                <p id="targetLocation"></p> <!-- Display target location here -->
+                <p id="distanceMessage"></p> <!-- Display distance message here -->
+                <label for="locationName">Search Location by Name:</label>
+                <input type="text" id="locationName" placeholder="Enter Location Name">
+                <button type="button" onclick="searchLocation()">Search</button>
+                <button type="button" id="alarmButton" onclick="toggleAlarm()">Toggle Alarm</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

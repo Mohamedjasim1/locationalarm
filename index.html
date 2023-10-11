@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Set the fixed background image for the body */
+        body {
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+        }
+
+       .navbar {
+            background-color: transparent;
+            font-size: 14px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .navbar .menu-icon {
+            display: inline-block;
+            cursor: pointer;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        .navbar .nav-links {
+            display: none;
+        }
+
+        .navbar.open .nav-links {
+            display: block;
+        }
+
+        .navbar .nav-links a {
+            color: rgba(255, 255, 255, 0.7); /* Transparent white text */
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .navbar .nav-links a:hover {
+            color: rgba(0, 116, 217, 0.7); /* Transparent blue on hover */
+        
+        }
+
+        /* Style for "Location Alarm" in the center of the page */
+        .center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: #fff; /* White color for text */
+        }
+
+        /* Style for the smaller white footer */
+        .footer {
+            background-color: #fff; /* White background color */
+            color: #333; /* Dark text color */
+            padding: 10px;
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footer a {
+            color: #333; /* Dark text color for links */
+            text-decoration: none;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+        <div class="nav-links">
+            <a class="active" href="#">Home</a>
+            <a href="set_alarm.html">Set Alarm</a>
+            <a href="info.html">Info</a>
+            <a href="login.html">Login</a>
+
+        </div>
+    </div>
+
+    <div class="center-text">Location Alarm</div>
+
+    <div class="footer">
+        <p>&copy; 2023 LOCATION ALARM</p>
+        <a href="https://www.instagram.com/ja__zziee/" target="_blank">Instagram</a>
+        <a href="https://www.linkedin.com/in/mohamed-jasim-b57802259/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">LinkedIn</a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>

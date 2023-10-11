@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Set the fixed background image for the body */
+        body {
+            background-color: #f0f0f0; /* Background color */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Style for the responsive navigation menu */
+        .navbar {
+            background-color: transparent;
+            font-size: 14px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .navbar .menu-icon {
+            display: inline-block;
+            cursor: pointer;
+            font-size: 20px;
+            margin-right: 10px;
+            color: #fff; /* White color for the menu icon */
+        }
+
+        .navbar .nav-links {
+            display: none;
+        }
+
+        .navbar.open .nav-links {
+            display: block;
+        }
+
+        .navbar .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #0074D9; /* Blue color on hover */
+        }
+
+        /* Style for content container */
+        .content-container {
+            padding: 20px;
+            background-color: #fff; /* White background color for content */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin: 20px;
+        }
+
+        /* Style for headings */
+        .content-container h2 {
+            color: #0074D9; /* Blue color for headings */
+        }
+
+        /* Style for paragraphs */
+        .content-container p {
+            margin-bottom: 15px;
+        }
+
+        /* Style for the smaller white footer */
+        .footer {
+            background-color: #fff; /* White background color */
+            color: #333; /* Dark text color */
+            padding: 10px;
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footer a {
+            color: #333; /* Dark text color for links */
+            text-decoration: none;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="set_alarm.html">Set Alarm</a>
+            <a class="active" href="#">Info</a>
+            <a href="login.html">Login</a>
+
+        </div>
+    </div>
+
+    <div class="content-container">
+        <h2>How to Use Location Alarm</h2>
+       
+        <p>Here are the steps to use Location Alarm:</p>
+        <ol>
+            <li>Step 1: Open the Location Alarm app.</li>
+            <li>Step 2: Set your target location by entering latitude and longitude.</li>
+            <li>Step 3: Click "Set Alarm" to activate the alarm.</li>
+            <li>Step 4: When you are near the target location, the alarm will ring.</li>
+        </ol>
+
+        <h2>Benefits and Merits</h2>
+        <div class="merits">
+            <p>1. Convenient and easy-to-use location-based alarm system.</p>
+            <p>2. Helps you avoid missing important locations and events.</p>
+            <p>3. Customizable settings for alarm radius and notification.</p>
+        </div>
+
+        
+
+       </div>
+    <div class="footer">
+        <p>&copy; 2023 LOCATION ALARM</p>
+        <a href="https://www.instagram.com/ja__zziee/" target="_blank">Instagram</a>
+        <a href="https://www.linkedin.com/in/mohamed-jasim-b57802259/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">LinkedIn</a>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
